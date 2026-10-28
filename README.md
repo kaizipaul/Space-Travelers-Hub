@@ -30,13 +30,14 @@
 
 - [React](https://react.dev/) 18 and React Router 6
 - [Redux](https://redux.js.org/) with `redux-thunk` for async data
+- [Vite](https://vitejs.dev/) for the dev server and build
 - [Tailwind CSS](https://tailwindcss.com/) with design tokens in `tailwind.config.js`
 - [Geist Sans and Geist Mono](https://vercel.com/font) (Sans for text, Mono for labels, IDs and status tags)
 - Data: [SpaceX API v3](https://github.com/r-spacex/SpaceX-API) (rockets, missions) and [Launch Library 2](https://thespacedevs.com/llapi) (upcoming launches)
 
 ## Getting Started
 
-**Prerequisites:** Node.js 16+ and npm.
+**Prerequisites:** Node.js 18+ and npm.
 
 ```bash
 git clone https://github.com/AhmedNazirMusah/Space-Travelers-Hub.git
@@ -51,16 +52,20 @@ The app runs at [http://localhost:3000](http://localhost:3000).
 
 | Command         | What it does                      |
 | --------------- | --------------------------------- |
-| `npm start`     | Start the dev server              |
-| `npm run build` | Create a production build         |
-| `npm test`      | Run the test runner               |
+| `npm start`     | Start the Vite dev server         |
+| `npm run build` | Create a production build (`dist/`) |
+| `npm run preview` | Preview the production build    |
 
 ### Linting
 
 ```bash
-npx eslint src --ext .js
+npx eslint src --ext .js,.jsx
 npx stylelint "src/**/*.css"
 ```
+
+## Deployment
+
+Deployed on [Vercel](https://vercel.com/): import the repo and the Vite preset is detected automatically (build command `npm run build`, output `dist`). `vercel.json` rewrites all routes to `index.html` so React Router pages work on refresh.
 
 ## Project Structure
 
