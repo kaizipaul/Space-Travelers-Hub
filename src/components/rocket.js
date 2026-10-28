@@ -1,16 +1,23 @@
 /* eslint-disable react/prop-types */
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useToast } from './toast';
 import { bookRocket, cancelBooking } from '../redux/rockets/rockets';
 
 const Rocket = ({ rocket, index }) => {
   const dispatch = useDispatch();
+  const notify = useToast();
+  const [launching, setLaunching] = useState(false);
 
   const cancelBookedRocket = (id) => {
     dispatch(cancelBooking(id));
+    notify(`${rocket.rocket_name} reservation cancelled`);
   };
 
   const activateBooking = (id) => {
     dispatch(bookRocket(id));
+    setLaunching(true);
+    notify(`${rocket.rocket_name} reserved. Liftoff! 🚀`);
   };
 
   return (
@@ -25,6 +32,15 @@ const Rocket = ({ rocket, index }) => {
           alt={`${rocket.rocket_name} rocket`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-space-900 via-transparent to-transparent" />
+        {launching && (
+          <span
+            className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 text-5xl animate-launch"
+            aria-hidden="true"
+            onAnimationEnd={() => setLaunching(false)}
+          >
+            🚀
+          </span>
+        )}
         {rocket.reserved && (
           <span className="absolute top-3 right-3 rounded-full bg-neon-400 px-3 py-1 text-xs font-bold uppercase tracking-wider text-space-900 shadow-neon">
             Reserved

@@ -2,17 +2,28 @@ import { useEffect, React } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchRockets } from '../redux/rockets/rockets';
 import Rocket from './rocket';
+import ErrorState from './errorState';
+import { FAILED } from '../redux/status/status';
 
 const SKELETON_COUNT = 6;
 
 const Rockets = () => {
   const rockets = useSelector((state) => state.rocketsReducer);
+  const status = useSelector((state) => state.statusReducer.rockets);
   const dispatch = useDispatch();
   useEffect(() => {
     if (!rockets.length > 0) {
       dispatch(fetchRockets());
     }
   }, []);
+
+  if (status === FAILED && rockets.length === 0) {
+    return (
+      <main className="mx-auto max-w-6xl px-6 py-12">
+        <ErrorState what="rockets" onRetry={() => dispatch(fetchRockets())} />
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">

@@ -1,16 +1,20 @@
 /* eslint-disable react/prop-types */
 import { useDispatch } from 'react-redux';
+import { useToast } from './toast';
 import { bookMission, cancelMission } from '../redux/missions/missions';
 
 const Mission = ({ mission, index }) => {
   const dispatch = useDispatch();
+  const notify = useToast();
 
   const bookAction = (id) => {
     dispatch(bookMission(id));
+    notify(`You joined ${mission.mission_name}`);
   };
 
   const cancelAction = (id) => {
     dispatch(cancelMission(id));
+    notify(`You left ${mission.mission_name}`);
   };
 
   return (

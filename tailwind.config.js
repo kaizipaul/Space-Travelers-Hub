@@ -30,6 +30,10 @@ module.exports = {
           '0%': { opacity: '0', transform: 'translateY(16px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        launch: {
+          '0%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+          '100%': { opacity: '0', transform: 'translateY(-14rem) scale(1.6)' },
+        },
         shimmer: {
           '0%': { backgroundPosition: '-400px 0' },
           '100%': { backgroundPosition: '400px 0' },
@@ -37,6 +41,7 @@ module.exports = {
       },
       animation: {
         'fade-up': 'fade-up 0.5s ease-out both',
+        launch: 'launch 1s ease-in forwards',
         shimmer: 'shimmer 1.6s linear infinite',
       },
     },

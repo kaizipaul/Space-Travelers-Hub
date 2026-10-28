@@ -2,17 +2,28 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMissions } from '../redux/missions/missions';
 import Mission from './mission';
+import ErrorState from './errorState';
+import { FAILED } from '../redux/status/status';
 
 const SKELETON_COUNT = 5;
 
 const Missions = () => {
   const missions = useSelector((state) => state.missionsReducer);
+  const status = useSelector((state) => state.statusReducer.missions);
   const dispatch = useDispatch();
   useEffect(() => {
     if (!missions.length > 0) {
       dispatch(fetchMissions());
     }
   }, []);
+
+  if (status === FAILED && missions.length === 0) {
+    return (
+      <main className="mx-auto max-w-6xl px-6 py-12">
+        <ErrorState what="missions" onRetry={() => dispatch(fetchMissions())} />
+      </main>
+    );
+  }
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
       <h2 className="text-4xl font-bold tracking-tight">Mission briefings</h2>
