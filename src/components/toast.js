@@ -28,16 +28,16 @@ export const ToastProvider = ({ children }) => {
     <ToastContext.Provider value={value}>
       {children}
       <div
-        className="pointer-events-none fixed bottom-6 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2"
+        className="pointer-events-none fixed bottom-20 left-1/2 z-20 flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 flex-col items-center gap-2 md:bottom-6"
         role="status"
         aria-live="polite"
       >
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className="glass animate-fade-up border-neon-400/40 bg-space-800/90 px-5 py-3 text-sm font-medium text-neon-300 shadow-neon"
+            className="panel animate-fade-up border-accent-400/40 bg-ink-800 px-4 py-2.5 font-mono text-xs text-accent-300"
           >
-            {toast.message}
+            {`> ${toast.message}`}
           </div>
         ))}
       </div>

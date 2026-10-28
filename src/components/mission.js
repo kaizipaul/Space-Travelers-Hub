@@ -19,20 +19,23 @@ const Mission = ({ mission, index }) => {
 
   return (
     <li
-      className="glass flex flex-col gap-5 p-6 transition duration-300 hover:border-neon-400/40 md:flex-row md:items-center animate-fade-up"
-      style={{ animationDelay: `${index * 80}ms` }}
+      className="panel flex flex-col gap-5 p-5 transition duration-200 hover:border-accent-400/40 md:flex-row md:items-center md:p-6 animate-fade-up"
+      style={{ animationDelay: `${index * 60}ms` }}
     >
       <div className="flex-1">
-        <h3 className="text-xl font-bold">{mission.mission_name}</h3>
-        <p className="mt-2 leading-relaxed text-slate-300">{mission.description}</p>
+        <p className="font-mono text-xs text-slate-500">{`MSN-${String(index + 1).padStart(2, '0')}`}</p>
+        <h3 className="mt-1 text-lg font-semibold">{mission.mission_name}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-slate-400">{mission.description}</p>
       </div>
-      <div className="flex flex-row items-center gap-4 md:w-72 md:flex-col md:items-stretch">
+      <div className="flex flex-row items-center justify-between gap-4 md:w-56 md:flex-col md:items-stretch md:justify-start">
         {mission.reserved ? (
-          <span className="rounded-full bg-neon-400/15 px-3 py-1 text-center text-sm font-semibold uppercase tracking-wider text-neon-300">
-            Active Member
+          <span className="tag justify-center border-accent-400/50 text-accent-300">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent-400" />
+            Active member
           </span>
         ) : (
-          <span className="rounded-full bg-white/10 px-3 py-1 text-center text-sm font-semibold uppercase tracking-wider text-slate-400">
+          <span className="tag justify-center border-line text-slate-500">
+            <span className="h-1.5 w-1.5 rounded-full bg-slate-600" />
             Not a member
           </span>
         )}
@@ -46,7 +49,7 @@ const Mission = ({ mission, index }) => {
           </button>
         ) : (
           <button
-            className="btn-neon"
+            className="btn-primary"
             type="button"
             onClick={() => bookAction(mission.id)}
           >

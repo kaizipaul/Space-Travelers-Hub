@@ -6,43 +6,45 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        space: {
-          900: '#04060f',
-          800: '#080d1f',
-          700: '#0d1530',
+        ink: {
+          950: '#08090b',
+          900: '#0d0f12',
+          800: '#13161a',
+          700: '#1a1e23',
         },
-        neon: {
-          300: '#7df3ff',
-          400: '#22e3ff',
-          500: '#00c8ee',
-          600: '#009fc0',
+        line: '#232830',
+        accent: {
+          300: '#67e8f9',
+          400: '#22d3ee',
+          500: '#06b6d4',
         },
       },
       fontFamily: {
-        sans: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
-      },
-      boxShadow: {
-        neon: '0 0 20px rgba(34, 227, 255, 0.35)',
-        'neon-lg': '0 0 40px rgba(34, 227, 255, 0.45)',
+        sans: ['Geist', 'system-ui', 'sans-serif'],
+        mono: ['"Geist Mono"', 'ui-monospace', 'monospace'],
       },
       keyframes: {
         'fade-up': {
-          '0%': { opacity: '0', transform: 'translateY(16px)' },
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         launch: {
-          '0%': { opacity: '1', transform: 'translateY(0) scale(1)' },
-          '100%': { opacity: '0', transform: 'translateY(-14rem) scale(1.6)' },
+          '0%': { opacity: '1', transform: 'translate(0, 0) scale(1)' },
+          '100%': { opacity: '0', transform: 'translate(4rem, -12rem) scale(1.4)' },
         },
         shimmer: {
           '0%': { backgroundPosition: '-400px 0' },
           '100%': { backgroundPosition: '400px 0' },
         },
+        blink: {
+          '50%': { opacity: '0' },
+        },
       },
       animation: {
-        'fade-up': 'fade-up 0.5s ease-out both',
+        'fade-up': 'fade-up 0.4s ease-out both',
         launch: 'launch 1s ease-in forwards',
         shimmer: 'shimmer 1.6s linear infinite',
+        blink: 'blink 1.1s steps(1) infinite',
       },
     },
   },

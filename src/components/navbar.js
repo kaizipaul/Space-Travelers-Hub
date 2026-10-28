@@ -1,32 +1,56 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import image from '../images/planet.png';
+import { RocketIcon, MissionIcon, ProfileIcon } from './icons';
 
-const linkClass = ({ isActive }) => `whitespace-nowrap rounded-full px-3 py-1.5 transition sm:px-4 ${
-  isActive
-    ? 'bg-neon-400/15 text-neon-300 shadow-neon'
-    : 'text-slate-300 hover:text-neon-300'
+const links = [
+  { to: '/', label: 'Rockets', Icon: RocketIcon },
+  { to: '/missions', label: 'Missions', Icon: MissionIcon },
+  { to: '/myprofile', label: 'Profile', Icon: ProfileIcon },
+];
+
+const desktopClass = ({ isActive }) => `rounded-md px-3 py-1.5 text-sm font-medium transition ${
+  isActive ? 'bg-accent-400/10 text-accent-300' : 'text-slate-400 hover:text-slate-100'
+}`;
+
+const mobileClass = ({ isActive }) => `relative flex flex-1 flex-col items-center gap-1 py-2.5 font-mono text-[10px] uppercase tracking-wider transition ${
+  isActive ? 'text-accent-300' : 'text-slate-500'
 }`;
 
 const NavBar = () => (
-  <header className="sticky top-0 z-10 border-b border-white/10 bg-space-900/70 backdrop-blur-lg">
-    <nav className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-4 sm:flex-row">
-      <div className="flex items-center gap-3">
-        <img className="h-10 w-auto drop-shadow-[0_0_8px_rgba(34,227,255,0.6)]" src={image} alt="Space Travelers' Hub logo" />
-        <h1 className="text-2xl font-bold tracking-tight">
-          Space Travelers&apos;
-          {' '}
-          <span className="text-neon-400">Hub</span>
-        </h1>
-      </div>
-      <div className="flex items-center gap-1 text-[1.05rem] sm:gap-2">
-        <NavLink className={linkClass} to="/">Rockets</NavLink>
-        <NavLink className={linkClass} to="/missions">Missions</NavLink>
-        <div className="mx-1 h-4 border-l border-white/20" />
-        <NavLink className={linkClass} to="/myprofile">My Profile</NavLink>
-      </div>
+  <>
+    <header className="sticky top-0 z-10 border-b border-line bg-ink-950/90 backdrop-blur">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5" aria-label="Main">
+        <div className="flex items-center gap-3">
+          <img className="h-8 w-auto invert" src={image} alt="Space Travelers' Hub logo" />
+          <h1 className="text-lg font-semibold tracking-tight">
+            Space Travelers&apos; Hub
+          </h1>
+        </div>
+        <div className="hidden items-center gap-1 md:flex">
+          {links.map(({ to, label }) => (
+            <NavLink key={to} className={desktopClass} to={to}>{label}</NavLink>
+          ))}
+        </div>
+      </nav>
+    </header>
+    <nav
+      className="fixed inset-x-0 bottom-0 z-10 flex border-t border-line bg-ink-950/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+      aria-label="Primary"
+    >
+      {links.map(({ to, label, Icon }) => (
+        <NavLink key={to} className={mobileClass} to={to}>
+          {({ isActive }) => (
+            <>
+              {isActive && <span className="absolute inset-x-6 top-0 h-px bg-accent-400" />}
+              <Icon className="h-5 w-5" />
+              {label}
+            </>
+          )}
+        </NavLink>
+      ))}
     </nav>
-  </header>
+  </>
 );
 
 export default NavBar;
