@@ -1,10 +1,11 @@
 import { loadCache, saveCache } from '../storage';
+import { LL2, fetchJson } from '../api';
 import {
   setStatus, LOADING, SUCCESS, FAILED,
 } from '../status/status';
 
 // Launch Library 2 keeps current data (the community SpaceX API stopped updating).
-const API = 'https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=7&hide_recent_previous=true';
+const API = `${LL2}/launch/upcoming/?limit=7&hide_recent_previous=true`;
 const GET_LAUNCHES = 'space-travellers-hub/launches/GET_LAUNCHES';
 const CACHE_KEY = 'launches';
 // The free tier allows ~15 requests/hour, so reuse results for 10 minutes.
@@ -33,9 +34,7 @@ export const fetchLaunches = () => async (dispatch) => {
 
   dispatch(setStatus('launches', LOADING));
   try {
-    const fetched = await fetch(API);
-    if (!fetched.ok) throw new Error(`Request failed with ${fetched.status}`);
-    const response = await fetched.json();
+    const response = await fetchJson(API);
     const launches = response.results.map(toLaunch);
     saveCache(CACHE_KEY, launches);
     dispatch({ type: GET_LAUNCHES, payload: launches });

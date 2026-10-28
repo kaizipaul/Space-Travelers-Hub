@@ -1,27 +1,43 @@
-import { loadIds } from '../storage';
+import { loadIds, loadCache, saveCache } from '../storage';
+import { LL2, fetchJson } from '../api';
 import {
   setStatus, LOADING, SUCCESS, FAILED,
 } from '../status/status';
 
-const API = 'https://api.spacexdata.com/v3/rockets';
+const API = `${LL2}/config/launcher/?manufacturer__name=SpaceX&mode=detailed&limit=20`;
+const CACHE_KEY = 'cache/rockets';
+// Rocket specs rarely change, so reuse results for a day.
+const CACHE_MS = 24 * 60 * 60 * 1000;
 const GET_ROCKETS = 'space-travellers-hub/rockets/GET_ROCKETS';
 const BOOK_ROCKET = 'space-travellers-hub/rockets/BOOK_ROCKET';
 const CANCEL_BOOKING = 'space-travellers-hub/rockets/CANCEL_BOOKING';
 
 const initialState = [];
 
+// Keep finished vehicles with a picture and a real description; skip test articles.
+const toRocket = (rocket) => ({
+  id: rocket.id,
+  rocket_name: rocket.full_name || rocket.name,
+  description: rocket.description,
+  flickr_images: [rocket.image_url],
+});
+
+const isShowable = (rocket) => rocket.image_url
+  && rocket.description && rocket.description.length > 50
+  && !/prototype/i.test(rocket.full_name || rocket.name);
+
 export const fetchRockets = () => async (dispatch) => {
   dispatch(setStatus('rockets', LOADING));
   try {
-    const fetched = await fetch(`${API}`);
-    if (!fetched.ok) throw new Error(`Request failed with ${fetched.status}`);
-    const response = await fetched.json();
+    let list = loadCache(CACHE_KEY, CACHE_MS);
+    if (!list) {
+      const response = await fetchJson(API);
+      list = response.results.filter(isShowable).map(toRocket);
+      saveCache(CACHE_KEY, list);
+    }
     const reservedIds = loadIds('rockets');
-    const rockets = response.map((rocket) => ({
-      id: rocket.id,
-      rocket_name: rocket.rocket_name,
-      description: rocket.description,
-      flickr_images: rocket.flickr_images,
+    const rockets = list.map((rocket) => ({
+      ...rocket,
       reserved: reservedIds.includes(rocket.id),
     }));
 
