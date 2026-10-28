@@ -1,57 +1,74 @@
 /* eslint-disable react/prop-types */
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useToast } from './toast';
+import { RocketIcon } from './icons';
 import { bookRocket, cancelBooking } from '../redux/rockets/rockets';
 
-const Rocket = ({ rocket }) => {
+const Rocket = ({ rocket, index }) => {
   const dispatch = useDispatch();
+  const notify = useToast();
+  const [launching, setLaunching] = useState(false);
 
   const cancelBookedRocket = (id) => {
     dispatch(cancelBooking(id));
+    notify(`${rocket.rocket_name} reservation cancelled`);
   };
 
   const activateBooking = (id) => {
     dispatch(bookRocket(id));
+    setLaunching(true);
+    notify(`${rocket.rocket_name} reserved. Liftoff!`);
   };
+
   return (
-    <li key={rocket.id}>
-      <div className="flex justify-start gap-12">
-        <div className="min-w-[25rem]">
-          <img
-            src={rocket.flickr_images[0]}
-            className="object-cover h-[15rem] w-full rounded-sm"
-            alt="rocketname"
-          />
-        </div>
-        <div className="rocket-description">
-          <h2 className="text-[1.5rem] font-bold">{rocket.rocket_name}</h2>
-          <span>
-            {rocket.reserved && (
-              <p className="text-[0.8rem] rounded-md p-1 text-white mt-2 bg-sky-500 w-fit">Reserved</p>
-            )}
-            {!rocket.reserved && (null)}
+    <li
+      className="panel group flex flex-col overflow-hidden transition duration-200 hover:border-accent-400/50 animate-fade-up"
+      style={{ animationDelay: `${index * 60}ms` }}
+    >
+      <div className="relative overflow-hidden border-b border-line">
+        <img
+          src={rocket.flickr_images[0]}
+          className="h-48 w-full object-cover saturate-75 transition duration-500 group-hover:scale-105 group-hover:saturate-100"
+          alt={`${rocket.rocket_name} rocket`}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink-900/80 via-transparent to-transparent" />
+        <span className="tag absolute top-3 left-3 border-line bg-ink-950/80 text-slate-400">
+          {`#${String(index + 1).padStart(2, '0')}`}
+        </span>
+        {rocket.reserved && (
+          <span className="tag absolute top-3 right-3 border-accent-400/50 bg-ink-950/80 text-accent-300">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent-400" />
+            Reserved
           </span>
-          <p className="leading-loose mt-4">{rocket.description}</p>
-          {rocket.reserved && (
-            <button
-              className="bg-zinc-100 rounded-md shadow-md p-2 mt-4 hover:bg-zinc-200 tracking-wide"
-              type="button"
-              onClick={() => cancelBookedRocket(rocket.id)}
-            >
-              {' '}
-              Cancel Reservation
-            </button>
-          )}
-          {' '}
-          {!rocket.reserved && (
+        )}
+        {launching && (
+          <RocketIcon
+            className="pointer-events-none absolute bottom-3 left-1/2 h-10 w-10 -translate-x-1/2 animate-launch text-accent-300"
+            onAnimationEnd={() => setLaunching(false)}
+          />
+        )}
+      </div>
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="text-xl font-semibold">{rocket.rocket_name}</h3>
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-400">{rocket.description}</p>
+        {rocket.reserved ? (
+          <button
+            className="btn-secondary mt-5"
+            type="button"
+            onClick={() => cancelBookedRocket(rocket.id)}
+          >
+            Cancel Reservation
+          </button>
+        ) : (
           <button
             type="button"
-            className="bg-blue-600 shadow-md p-2 text-white hover:bg-blue-700 rounded-md mt-4 tracking-wide"
+            className="btn-primary mt-5"
             onClick={() => activateBooking(rocket.id)}
           >
             Reserve Rocket
           </button>
-          )}
-        </div>
+        )}
       </div>
     </li>
   );
