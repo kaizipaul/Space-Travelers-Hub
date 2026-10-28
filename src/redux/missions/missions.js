@@ -1,27 +1,47 @@
-import { loadIds } from '../storage';
+import { loadIds, loadCache, saveCache } from '../storage';
+import { LL2, fetchJson } from '../api';
 import {
   setStatus, LOADING, SUCCESS, FAILED,
 } from '../status/status';
 
-const apiUrl = 'https://api.spacexdata.com/v3/missions';
+const apiUrl = `${LL2}/launch/previous/?lsp__name=SpaceX&limit=40`;
+const CACHE_KEY = 'cache/missions';
+const CACHE_MS = 30 * 60 * 1000;
+const MAX_MISSIONS = 10;
 const GET_MISSIONS = 'space-travellers-hub/missions/GET_MISSIONS';
 const BOOK_MISSION = 'space-travellers-hub/missions/BOOK_MISSION';
 const CANCEL_MISSION = 'space-travellers-hub/missions/CANCEL_MISSION';
 
 const initialState = [];
 
+// Recent SpaceX missions, one per name. Starlink batches are skipped: there are dozens of them.
+const toMissions = (launches) => {
+  const seen = new Set();
+  return launches
+    .map((launch) => launch.mission)
+    .filter((mission) => mission && mission.description && !/starlink/i.test(mission.name))
+    .filter((mission) => !seen.has(mission.name) && seen.add(mission.name))
+    .slice(0, MAX_MISSIONS)
+    .map((mission) => ({
+      id: mission.id,
+      mission_name: mission.name,
+      description: mission.description,
+    }));
+};
+
 export const fetchMissions = () => async (dispatch) => {
   dispatch(setStatus('missions', LOADING));
   try {
-    const fetched = await fetch(`${apiUrl}`);
-    if (!fetched.ok) throw new Error(`Request failed with ${fetched.status}`);
-    const response = await fetched.json();
+    let list = loadCache(CACHE_KEY, CACHE_MS);
+    if (!list) {
+      const response = await fetchJson(apiUrl);
+      list = toMissions(response.results);
+      saveCache(CACHE_KEY, list);
+    }
     const reservedIds = loadIds('missions');
-    const missions = response.map((mission) => ({
-      id: mission.mission_id,
-      mission_name: mission.mission_name,
-      description: mission.description,
-      reserved: reservedIds.includes(mission.mission_id),
+    const missions = list.map((mission) => ({
+      ...mission,
+      reserved: reservedIds.includes(mission.id),
     }));
 
     dispatch({

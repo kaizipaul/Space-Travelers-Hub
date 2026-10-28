@@ -15,8 +15,6 @@
   <img src="docs/screenshots/mobile.png" alt="Mobile layout with icon bottom navigation" width="300" />
 </p>
 
-> Screenshots use sample data. Rocket and mission text come from the SpaceX API.
-
 ## Features
 
 - **Reserve rockets** and **join missions**, with a launch animation and toast feedback.
@@ -33,7 +31,7 @@
 - [Vite](https://vitejs.dev/) for the dev server and build
 - [Tailwind CSS](https://tailwindcss.com/) with design tokens in `tailwind.config.js`
 - [Geist Sans and Geist Mono](https://vercel.com/font) (Sans for text, Mono for labels, IDs and status tags)
-- Data: [SpaceX API v3](https://github.com/r-spacex/SpaceX-API) (rockets, missions) and [Launch Library 2](https://thespacedevs.com/llapi) (upcoming launches)
+- Data: [Launch Library 2](https://thespacedevs.com/llapi) for rockets, missions and upcoming launches
 
 ## Getting Started
 
@@ -82,8 +80,8 @@ src/
 
 ## Notes
 
-- The launches API has a free-tier rate limit (about 15 requests per hour), so responses are cached for 10 minutes.
-- The SpaceX v3 API is no longer actively updated, so the rockets and missions data is static.
+- All data comes from Launch Library 2, whose free tier allows about 15 requests per hour. Responses are cached in `localStorage` (rockets for a day, missions for 30 minutes, launches for 10 minutes), and requests time out after 10 seconds.
+- The original SpaceX community API (`api.spacexdata.com`) stopped responding, so rockets and missions now come from Launch Library 2. Missions are the most recent SpaceX flights, one per name, without Starlink batches.
 
 ## Authors
 
