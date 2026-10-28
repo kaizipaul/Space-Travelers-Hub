@@ -45,3 +45,10 @@ export const AlertIcon = ({ className, onAnimationEnd }) => (
     <path d="M12 17h.01" />
   </Icon>
 );
+
+export const LaunchIcon = ({ className, onAnimationEnd }) => (
+  <Icon className={className} onAnimationEnd={onAnimationEnd}>
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 6v6l4 2" />
+  </Icon>
+);

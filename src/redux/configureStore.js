@@ -3,10 +3,13 @@ import logger from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import rocketsReducer from './rockets/rockets';
 import missionsReducer from './missions/missions';
+import launchesReducer from './launches/launches';
 import statusReducer from './status/status';
 import { saveIds } from './storage';
 
-const reducer = combineReducers({ rocketsReducer, missionsReducer, statusReducer });
+const reducer = combineReducers({
+  rocketsReducer, missionsReducer, launchesReducer, statusReducer,
+});
 
 const middleware = process.env.NODE_ENV === 'production'
   ? [thunkMiddleware]

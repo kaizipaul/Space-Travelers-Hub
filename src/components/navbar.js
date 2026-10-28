@@ -1,11 +1,14 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import image from '../images/planet.png';
-import { RocketIcon, MissionIcon, ProfileIcon } from './icons';
+import {
+  RocketIcon, MissionIcon, LaunchIcon, ProfileIcon,
+} from './icons';
 
 const links = [
   { to: '/', label: 'Rockets', Icon: RocketIcon },
   { to: '/missions', label: 'Missions', Icon: MissionIcon },
+  { to: '/launches', label: 'Launches', Icon: LaunchIcon },
   { to: '/myprofile', label: 'Profile', Icon: ProfileIcon },
 ];
 

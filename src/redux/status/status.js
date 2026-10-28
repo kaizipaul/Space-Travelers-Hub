@@ -4,7 +4,7 @@ export const LOADING = 'loading';
 export const SUCCESS = 'success';
 export const FAILED = 'failed';
 
-const initialState = { rockets: 'idle', missions: 'idle' };
+const initialState = { rockets: 'idle', missions: 'idle', launches: 'idle' };
 
 export const setStatus = (resource, status) => ({
   type: SET_STATUS,
