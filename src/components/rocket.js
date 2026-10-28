@@ -2,7 +2,7 @@
 import { useDispatch } from 'react-redux';
 import { bookRocket, cancelBooking } from '../redux/rockets/rockets';
 
-const Rocket = ({ rocket }) => {
+const Rocket = ({ rocket, index }) => {
   const dispatch = useDispatch();
 
   const cancelBookedRocket = (id) => {
@@ -12,46 +12,45 @@ const Rocket = ({ rocket }) => {
   const activateBooking = (id) => {
     dispatch(bookRocket(id));
   };
+
   return (
-    <li key={rocket.id}>
-      <div className="flex justify-start gap-12">
-        <div className="min-w-[25rem]">
-          <img
-            src={rocket.flickr_images[0]}
-            className="object-cover h-[15rem] w-full rounded-sm"
-            alt="rocketname"
-          />
-        </div>
-        <div className="rocket-description">
-          <h2 className="text-[1.5rem] font-bold">{rocket.rocket_name}</h2>
-          <span>
-            {rocket.reserved && (
-              <p className="text-[0.8rem] rounded-md p-1 text-white mt-2 bg-sky-500 w-fit">Reserved</p>
-            )}
-            {!rocket.reserved && (null)}
+    <li
+      className="glass group flex flex-col overflow-hidden transition duration-300 hover:-translate-y-1 hover:border-neon-400/50 hover:shadow-neon animate-fade-up"
+      style={{ animationDelay: `${index * 80}ms` }}
+    >
+      <div className="relative overflow-hidden">
+        <img
+          src={rocket.flickr_images[0]}
+          className="h-52 w-full object-cover transition duration-500 group-hover:scale-110"
+          alt={`${rocket.rocket_name} rocket`}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-space-900 via-transparent to-transparent" />
+        {rocket.reserved && (
+          <span className="absolute top-3 right-3 rounded-full bg-neon-400 px-3 py-1 text-xs font-bold uppercase tracking-wider text-space-900 shadow-neon">
+            Reserved
           </span>
-          <p className="leading-loose mt-4">{rocket.description}</p>
-          {rocket.reserved && (
-            <button
-              className="bg-zinc-100 rounded-md shadow-md p-2 mt-4 hover:bg-zinc-200 tracking-wide"
-              type="button"
-              onClick={() => cancelBookedRocket(rocket.id)}
-            >
-              {' '}
-              Cancel Reservation
-            </button>
-          )}
-          {' '}
-          {!rocket.reserved && (
+        )}
+      </div>
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="text-2xl font-bold">{rocket.rocket_name}</h3>
+        <p className="mt-3 flex-1 leading-relaxed text-slate-300">{rocket.description}</p>
+        {rocket.reserved ? (
+          <button
+            className="btn-ghost mt-5"
+            type="button"
+            onClick={() => cancelBookedRocket(rocket.id)}
+          >
+            Cancel Reservation
+          </button>
+        ) : (
           <button
             type="button"
-            className="bg-blue-600 shadow-md p-2 text-white hover:bg-blue-700 rounded-md mt-4 tracking-wide"
+            className="btn-neon mt-5"
             onClick={() => activateBooking(rocket.id)}
           >
             Reserve Rocket
           </button>
-          )}
-        </div>
+        )}
       </div>
     </li>
   );

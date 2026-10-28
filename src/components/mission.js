@@ -2,7 +2,7 @@
 import { useDispatch } from 'react-redux';
 import { bookMission, cancelMission } from '../redux/missions/missions';
 
-const Mission = ({ mission }) => {
+const Mission = ({ mission, index }) => {
   const dispatch = useDispatch();
 
   const bookAction = (id) => {
@@ -14,44 +14,43 @@ const Mission = ({ mission }) => {
   };
 
   return (
-    <tr key={mission.id} className="odd:bg-zinc-200">
-      <td className="border-2 border-zinc-400 p-2 font-bold text-[1.1rem]">{mission.mission_name}</td>
-      <td className="w-[60%] border-2 border-zinc-400 p-2">{mission.description}</td>
-      <td className="w-[15%] border-2 border-zinc-400 text-center">
-        <div className="flex justify-center">
-          {mission.reserved && (
-            <p className="bg-sky-400 rounded-md p-2 text-white ">Active Member</p>
-          )}
-          {' '}
-          {!mission.reserved && (
-          <p className="text-white bg-zinc-500 p-2 rounded-md">NOT A MEMBER</p>
-          )}
-        </div>
-      </td>
-      <td className="w-[15%] border-2 border-zinc-400 text-center">
-        {mission.reserved && (
+    <li
+      className="glass flex flex-col gap-5 p-6 transition duration-300 hover:border-neon-400/40 md:flex-row md:items-center animate-fade-up"
+      style={{ animationDelay: `${index * 80}ms` }}
+    >
+      <div className="flex-1">
+        <h3 className="text-xl font-bold">{mission.mission_name}</h3>
+        <p className="mt-2 leading-relaxed text-slate-300">{mission.description}</p>
+      </div>
+      <div className="flex flex-row items-center gap-4 md:w-72 md:flex-col md:items-stretch">
+        {mission.reserved ? (
+          <span className="rounded-full bg-neon-400/15 px-3 py-1 text-center text-sm font-semibold uppercase tracking-wider text-neon-300">
+            Active Member
+          </span>
+        ) : (
+          <span className="rounded-full bg-white/10 px-3 py-1 text-center text-sm font-semibold uppercase tracking-wider text-slate-400">
+            Not a member
+          </span>
+        )}
+        {mission.reserved ? (
           <button
-            className="border-2 border-red-500 rounded-md text-red-700 p-2 hover:bg-red-500 hover:text-white tracking-wide"
+            className="btn-danger"
             type="button"
             onClick={() => cancelAction(mission.id)}
           >
-            {' '}
-            Cancel Mission
+            Leave Mission
+          </button>
+        ) : (
+          <button
+            className="btn-neon"
+            type="button"
+            onClick={() => bookAction(mission.id)}
+          >
+            Join Mission
           </button>
         )}
-        {' '}
-        {!mission.reserved && (
-        <button
-          className="bg-blue-600 rounded-md shadow-md p-2 text-white hover:bg-blue-700 tracking-wide"
-          type="button"
-          onClick={() => bookAction(mission.id)}
-        >
-          Join Mission
-        </button>
-        )}
-
-      </td>
-    </tr>
+      </div>
+    </li>
   );
 };
 
